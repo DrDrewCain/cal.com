@@ -5,7 +5,8 @@ import type { Dayjs } from "@calcom/dayjs";
 import dayjs from "@calcom/dayjs";
 import { parseBookingLimit, parseDurationLimit } from "@calcom/lib";
 import { getWorkingHours } from "@calcom/lib/availability";
-import { buildDateRanges, subtract } from "@calcom/lib/date-ranges";
+// import { buildDateRanges, subtract} from "@calcom/lib/date-ranges";
+import { buildDateRanges } from "@calcom/lib/date-ranges";
 import { HttpError } from "@calcom/lib/http-error";
 import { descendingLimitKeys, intervalLimitKeyToUnit } from "@calcom/lib/intervalLimit";
 import logger from "@calcom/lib/logger";
@@ -277,12 +278,13 @@ export const getUserAvailability = async function getUsersWorkingHoursLifeTheUni
     timeZone,
   });
 
-  const formattedBusyTimes = detailedBusyTimes.map((busy) => ({
-    start: dayjs(busy.start),
-    end: dayjs(busy.end),
-  }));
+  // const formattedBusyTimes = detailedBusyTimes.map((busy) => ({
+  //   start: dayjs(busy.start),
+  //   end: dayjs(busy.end),
+  // }));
 
-  const dateRangesInWhichUserIsAvailable = subtract(dateRanges, formattedBusyTimes);
+  // const dateRangesInWhichUserIsAvailable = subtract(dateRanges, formattedBusyTimes);
+  const dateRangesInWhichUserIsAvailable = dateRanges;
 
   log.debug(
     `getWorkingHours took ${endGetWorkingHours - startGetWorkingHours}ms for userId ${userId}`,

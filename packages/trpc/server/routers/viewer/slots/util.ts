@@ -597,6 +597,11 @@ export async function getAvailableSlots({ input, ctx }: GetScheduleOptions) {
     Object.create(null)
   );
 
+  // const computedBusySlots = userAvailability.busy.map((busy) => ({
+  //   start: dayjs(busy.start),
+  //   end: dayjs(busy.end),
+  // }));
+
   loggerWithEventDetails.debug(`getSlots took ${getSlotsTime}ms and executed ${getSlotsCount} times`);
 
   loggerWithEventDetails.debug(
@@ -604,8 +609,11 @@ export async function getAvailableSlots({ input, ctx }: GetScheduleOptions) {
   );
   loggerWithEventDetails.debug(`Available slots: ${JSON.stringify(computedAvailableSlots)}`);
 
+  // loggerWithEventDetails.debug(`Available slots: ${JSON.stringify(computedBusySlots)}`);
+
   return {
     slots: computedAvailableSlots,
+    // busy: computedBusySlots,
   };
 }
 

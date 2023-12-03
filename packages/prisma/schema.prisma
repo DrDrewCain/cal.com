@@ -117,6 +117,7 @@ model EventType {
   bookingLimits                   Json?
   /// @zod.custom(imports.intervalLimitsType)
   durationLimits                  Json?
+  WaitlistEntry                   WaitlistEntry[]
 
   @@unique([userId, slug])
   @@unique([teamId, slug])
@@ -261,7 +262,8 @@ model User {
   //linkedUsers          User[]                  @relation("linked_account")*/
 
   // Used to lock the user account
-  locked Boolean @default(false)
+  locked        Boolean         @default(false)
+  WaitlistEntry WaitlistEntry[]
 
   @@unique([email])
   @@unique([email, username])
@@ -875,6 +877,19 @@ model BookingSeat {
 
   @@index([bookingId])
   @@index([attendeeId])
+}
+
+model WaitlistEntry {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  eventTypeId       Int
+  preferredTimeSlot DateTime
+  waitlistTimestamp DateTime  @default(now())
+  User              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  EventType         EventType @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+  isSeat            Boolean   @default(false)
+
+  @@unique([userId, eventTypeId, preferredTimeSlot])
 }
 
 model VerifiedNumber {
