@@ -1,2 +1,4 @@
 -- AlterTable
-ALTER TABLE "EventType" ADD COLUMN     "onlyShowFirstAvailableSlot" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "EventType"
+    ADD COLUMN "onlyShowFirstAvailableSlot" BOOLEAN NOT NULL DEFAULT FALSE;
+
