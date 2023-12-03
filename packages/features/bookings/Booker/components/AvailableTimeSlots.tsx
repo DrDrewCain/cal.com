@@ -26,7 +26,7 @@ type AvailableTimeSlotsProps = {
 /**
  * Renders available time slots for a given date.
  * It will extract the date from the booker store.
- * Next to that you can also pass in the `extraDays` prop, this
+ * Next to that you can also pa  ss in the `extraDays` prop, this
  * will also fetch the next `extraDays` days and show multiple days
  * in columns next to each other.
  */
@@ -99,6 +99,16 @@ export const AvailableTimeSlots = ({
       containerRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [containerRef, schedule.isLoading, isEmbed, isMobile]);
+
+  trpc.viewer.public.slots.onReserve.useSubscription(undefined, {
+    onData(data) {
+      console.log("data", data);
+      return true;
+    },
+    onError(err) {
+      console.error("Subscription error:", err);
+    },
+  });
 
   return (
     <>
