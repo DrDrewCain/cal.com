@@ -8,7 +8,8 @@
   "main": "index.ts",
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "server": "ts-node --project tsconfig.server.json trpc/server.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.3.9",
