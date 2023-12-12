@@ -1,9 +1,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import moment from "moment-timezone";
 import { useSession } from "next-auth/react";
-import { useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
 import { shallow } from "zustand/shallow";
 
 import dayjs from "@calcom/dayjs";
+import { useTimePreferences } from "@calcom/features/bookings/lib";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
@@ -32,7 +35,9 @@ export function Header({
 }) {
   const { t, i18n } = useLocale();
   const session = useSession();
+  const searchParams = useSearchParams();
 
+  const setTimezone = useTimePreferences((state) => state.setTimezone);
   const [layout, setLayout] = useBookerStore((state) => [state.layout, state.setLayout], shallow);
   const selectedDateString = useBookerStore((state) => state.selectedDate);
   const setSelectedDate = useBookerStore((state) => state.setSelectedDate);
@@ -53,8 +58,26 @@ export function Header({
     [setLayout, layout]
   );
 
-  if (isMobile || !enabledLayouts) return null;
+  useEffect(() => {
+    const defaultTimeZone =
+      localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess() || "Europe/London";
 
+    try {
+      const paramTimeZone = searchParams?.get("timezone");
+      // Check if the timezone is valid
+      const isValidTimeZone = paramTimeZone && !!moment.tz.zone(paramTimeZone);
+      if (isValidTimeZone) {
+        setTimezone(paramTimeZone);
+      } else {
+        throw new Error("Invalid timezone");
+      }
+    } catch (e) {
+      console.error(e);
+      setTimezone(defaultTimeZone);
+    }
+  }, [searchParams, setTimezone]);
+
+  if (isMobile || !enabledLayouts) return null;
   // Only reason we create this component, is because it is used 3 times in this component,
   // and this way we can't forget to update one of the props in all places :)
   const LayoutToggleWithData = () => {
